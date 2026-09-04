@@ -90,14 +90,91 @@ function aboutTemplate() {
 }
 
 
-function galleryImageMarkup(projectId, number, title) {
-  const base = `assets/project-${projectId}/${String(number).padStart(2, "0")}`;
-  const exts = ["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"];
-  return `<img src="${base}.${exts[0]}" data-base="${base}" data-exts='${JSON.stringify(exts.slice(1))}' alt="${title}, Bild ${number}" onerror="tryNextImageExtension(this)">`;
+
+const galleryExtensions = ["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"];
+
+function loadSequentialMainGallery(projectId, title, max = 100) {
+  const container = document.querySelector(".project-gallery");
+  if (!container) return;
+
+  let number = 1;
+
+  function loadNumber() {
+    if (number > max) return;
+    const padded = String(number).padStart(2, "0");
+    const base = `assets/project-${projectId}/${padded}`;
+    let extIndex = 0;
+
+    function tryExtension() {
+      if (extIndex >= galleryExtensions.length) return; // first missing number = end of gallery
+      const ext = galleryExtensions[extIndex++];
+      const img = new Image();
+      img.alt = `${title}, Bild ${number}`;
+      img.decoding = "async";
+      img.onload = () => {
+        container.appendChild(img);
+        number += 1;
+        loadNumber();
+      };
+      img.onerror = tryExtension;
+      img.src = `${base}.${ext}`;
+    }
+
+    tryExtension();
+  }
+
+  loadNumber();
 }
-function tryNextImageExtension(img) {
-  let exts=[]; try{exts=JSON.parse(img.dataset.exts||"[]")}catch(e){}
-  if(!exts.length){img.remove();return;} const next=exts.shift(); img.dataset.exts=JSON.stringify(exts); img.src=`${img.dataset.base}.${next}`;
+
+function loadSequentialSubGallery(projectId, folder, title, mode = "process", max = 30) {
+  const container = document.querySelector(`.${mode === "book" ? "book-gallery" : "process-gallery"}`);
+  if (!container) return;
+
+  let number = 1;
+
+  function loadNumber() {
+    if (number > max) return;
+    const src = `assets/project-${projectId}/${folder}/${String(number).padStart(2, "0")}.jpg`;
+    const img = new Image();
+    img.alt = `${title}, ${mode === "book" ? "Buch" : "Prozess"} ${number}`;
+    img.decoding = "async";
+
+    img.onload = () => {
+      if (mode === "book") {
+        container.appendChild(img);
+      } else {
+        const button = document.createElement("button");
+        button.className = "process-thumb interactive";
+        button.type = "button";
+        button.dataset.lightbox = src;
+        button.setAttribute("aria-label", "Prozessbild vergrößern");
+        button.appendChild(img);
+        button.addEventListener("mouseenter", () => cursor.classList.add("is-link"));
+        button.addEventListener("mouseleave", () => cursor.classList.remove("is-link"));
+        container.appendChild(button);
+      }
+      number += 1;
+      loadNumber();
+    };
+
+    img.onerror = () => {}; // first missing number = end of this sub-gallery
+    img.src = src;
+  }
+
+  loadNumber();
+}
+
+function loadProjectMedia(id) {
+  const p = projects[id];
+  const numericId = Number(id);
+  loadSequentialMainGallery(id, p.title, 100);
+
+  if (numericId === 3 || numericId === 5 || numericId === 6) {
+    loadSequentialSubGallery(numericId, "process", p.title, "process", 30);
+  }
+  if (numericId === 6) {
+    loadSequentialSubGallery(6, "book", p.title, "book", 30);
+  }
 }
 
 function projectTemplate(id) {
@@ -112,9 +189,7 @@ function projectTemplate(id) {
       <a class="page-close interactive" href="index.html#resume" aria-label="Zur Startseite">×</a>
 
       <div class="project-page-top">
-        <div class="project-gallery" aria-label="Projektbilder">
-          ${Array.from({length:100}, (_, i) => galleryImageMarkup(id, i + 1, p.title)).join("")}
-        </div>
+        <div class="project-gallery" aria-label="Projektbilder"></div>
 
         <div class="project-meta">
           <h1>${p.title}<br>${p.medium} · ${p.year}</h1>
@@ -151,16 +226,14 @@ function projectTemplate(id) {
           </div>` : ""}
 
         ${numericId === 6 ? `
-          <div class="book-gallery" aria-label="Buchbilder">
-            ${subImageSeries(6, "book", 30).map((src, i) => `<img src="${src}" alt="Charta Incognita, Buch ${i + 1}" onerror="this.remove()">`).join("")}
-          </div>` : ""}
+          <div class="book-gallery" aria-label="Buchbilder"></div>` : ""}
 
         ${numericId === 3 ? `
           <div class="project-process-row project-process-row-3">
             <div class="project-video project-video-vertical"><iframe src="https://www.youtube-nocookie.com/embed/kBxHE3HkS7o?rel=0" title="Grenzen in Bewegung — Prozessvideo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="origin-when-cross-origin" allowfullscreen></iframe></div>
-            <div class="process-gallery" aria-label="Prozessbilder">${subImageSeries(3, "process", 30).map((src, i) => `<button class="process-thumb interactive" type="button" data-lightbox="${src}" aria-label="Prozessbild vergrößern"><img src="${src}" alt="${p.title}, Prozess ${i + 1}" onerror="this.closest('button').remove()"></button>`).join("")}</div>
+            <div class="process-gallery" aria-label="Prozessbilder"></div>
           </div>` : hasProcess ? `
-          <div class="process-gallery" aria-label="Prozessbilder">${subImageSeries(numericId, "process", 30).map((src, i) => `<button class="process-thumb interactive" type="button" data-lightbox="${src}" aria-label="Prozessbild vergrößern"><img src="${src}" alt="${p.title}, Prozess ${i + 1}" onerror="this.closest('button').remove()"></button>`).join("")}</div>` : ""}
+          <div class="process-gallery" aria-label="Prozessbilder"></div>` : ""}
       </div>
 
       <nav class="project-switcher" aria-label="Projekt Navigation">
@@ -298,6 +371,7 @@ function render() {
       link.classList.toggle("is-active", link.dataset.project === id);
     });
     window.scrollTo(0, 0);
+    loadProjectMedia(id);
   } else {
     app.innerHTML = homeTemplate();
     document.title = "Olivia Bayne — Kommunikationsdesign";
