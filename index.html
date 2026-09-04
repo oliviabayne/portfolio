@@ -18,6 +18,44 @@
 }
 </style>
 
+
+<style>
+@media (max-width:800px){
+  /* Mobile preview: no arrow control, simpler hint */
+  .preview-window .window-expand{
+    display:none !important;
+  }
+
+  /* Mobile project pages: larger gallery and more space below the fixed project list */
+  .project-page{
+    padding-top:184px !important;
+  }
+  .project-page .page-close{
+    top:143px !important;
+  }
+
+  .project-gallery img,
+  .project-page[data-project="1"] .project-gallery img,
+  .project-page[data-project="2"] .project-gallery img,
+  .project-page[data-project="3"] .project-gallery img,
+  .project-page[data-project="4"] .project-gallery img,
+  .project-page[data-project="5"] .project-gallery img,
+  .project-page[data-project="6"] .project-gallery img{
+    height:62.4vw !important; /* approx. 20% larger than 52vw */
+    max-height:396px !important;
+  }
+}
+</style>
+
+
+<style>
+.preview-hint-mobile{display:none;}
+@media (max-width:800px){
+  .preview-hint-desktop{display:none !important;}
+  .preview-hint-mobile{display:inline !important;}
+}
+</style>
+
 </head>
 <body>
   <div class="cursor" aria-hidden="true"></div>
@@ -414,7 +452,7 @@ function openPreview(id, x, y) {
     <div class="preview-info">
       <p>${p.description}</p>
       ${String(id) === "1" ? "" : `<p>${p.courseInfo}</p>`}
-      <p class="preview-hint">klick ins Fenster oder auf ↗</p>
+      <p class="preview-hint"><span class="preview-hint-desktop">klick ins Fenster oder auf ↗</span><span class="preview-hint-mobile">klick ins Fenster</span></p>
     </div>
   `;
 
