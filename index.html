@@ -6,6 +6,18 @@
   <title>Olivia Bayne — Kommunikationsdesign</title>
   <meta name="description" content="Olivia Bayne — Kommunikationsdesign, Hamburg.">
   <link rel="stylesheet" href="style.css">
+
+<style>
+@media (max-width:800px){
+  .project-wall .project-card[data-preview="1"]{order:1 !important;}
+  .project-wall .project-card[data-preview="2"]{order:2 !important;}
+  .project-wall .project-card[data-preview="3"]{order:3 !important;}
+  .project-wall .project-card[data-preview="4"]{order:4 !important;}
+  .project-wall .project-card[data-preview="5"]{order:5 !important;}
+  .project-wall .project-card[data-preview="6"]{order:6 !important;}
+}
+</style>
+
 </head>
 <body>
   <div class="cursor" aria-hidden="true"></div>
@@ -100,6 +112,19 @@ function tryNextCoverExtension(img) {
   const base = img.dataset.coverBase;
   img.dataset.coverExtIndex = String(current + 1);
   img.src = `${base}.${extensions[current]}`;
+}
+
+
+function tryNextPreviewExtension(img) {
+  const extensions = ["JPG", "jpeg", "JPEG", "png", "PNG", "webp", "WEBP"];
+  const current = Number(img.dataset.previewExtIndex || "0");
+  if (current >= extensions.length) {
+    img.onerror = null;
+    img.remove();
+    return;
+  }
+  img.dataset.previewExtIndex = String(current + 1);
+  img.src = `${img.dataset.previewBase}.${extensions[current]}`;
 }
 
 function homeTemplate() {
@@ -384,7 +409,7 @@ function openPreview(id, x, y) {
   previewContent.innerHTML = `
     <h2 class="preview-title">${p.title}<br>${p.medium} · ${p.year}</h2>
     <div class="preview-images">
-      ${(Number(id) === 3 || Number(id) === 6 ? p.previewImages.slice(0,1) : p.previewImages).map((src, i) => `<img src="${src}" alt="${p.title}, Vorschau ${i + 1}" onerror="this.remove()">`).join("")}
+      ${(Number(id) === 3 || Number(id) === 6 ? p.previewImages.slice(0,1) : p.previewImages).map((src, i) => `<img src="${src}" data-preview-base="${src.replace(/\.[^.]+$/, '')}" data-preview-ext-index="0" alt="${p.title}, Vorschau ${i + 1}" onerror="tryNextPreviewExtension(this)">`).join("")}
     </div>
     <div class="preview-info">
       <p>${p.description}</p>
