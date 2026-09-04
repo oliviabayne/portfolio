@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Olivia Bayne — Kommunikationsdesign</title>
+  <meta name="description" content="Olivia Bayne — Kommunikationsdesign, Hamburg.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="cursor" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="identity interactive" id="identityLink" href="index.html?about=1" aria-label="Olivia Bayne">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="identity-text">
+        <span class="name">Olivia Bayne</span>
+        <span class="subtitle">Kommunikationsdesign, Hamburg</span>
+      </span>
+    </a>
+
+    <nav class="project-nav" aria-label="Projekte">
+      <a class="project-link interactive" href="index.html?project=1" data-project="1"><span>This World and Others Like It</span></a>
+      <a class="project-link interactive" href="index.html?project=2" data-project="2"><span>Common Sense</span></a>
+      <a class="project-link interactive" href="index.html?project=3" data-project="3"><span>Grenzen in Bewegung</span></a>
+      <a class="project-link interactive" href="index.html?project=4" data-project="4"><span>fotzig &amp; politisch</span></a>
+      <a class="project-link interactive" href="index.html?project=5" data-project="5"><span>[DIS]PLAY THE SYSTEM</span></a>
+      <a class="project-link interactive" href="index.html?project=6" data-project="6"><span>Charta Incognita</span></a>
+    </nav>
+  </header>
+
+  <main id="app"></main>
+
+  <div class="preview-backdrop" id="previewBackdrop" aria-hidden="true"></div>
+  <section class="preview-window" id="previewWindow" aria-hidden="true" role="dialog" aria-modal="true">
+    <button class="window-close interactive" id="previewClose" aria-label="Preview schließen"><span class="close-mark">×</span></button>
+    <button class="window-expand interactive" id="previewExpand" aria-label="Projekt öffnen">↗</button>
+    <div id="previewContent"></div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
