@@ -89,13 +89,26 @@ const cursor = document.querySelector(".cursor");
 let lastPointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 let activePreview = null;
 
+
+function tryNextCoverExtension(img) {
+  const extensions = ["JPG", "jpeg", "JPEG", "png", "PNG", "webp", "WEBP"];
+  const current = Number(img.dataset.coverExtIndex || "0");
+  if (current >= extensions.length) {
+    img.onerror = null;
+    return;
+  }
+  const base = img.dataset.coverBase;
+  img.dataset.coverExtIndex = String(current + 1);
+  img.src = `${base}.${extensions[current]}`;
+}
+
 function homeTemplate() {
   const order = [1, 2, 3, 4, 6, 5];
   const card = id => {
     const p = projects[id];
     return `
       <button class="project-card interactive" data-preview="${id}" aria-label="${p.title} öffnen">
-        <img src="${p.coverImage}" alt="${p.title}">
+        <img src="${p.coverImage}" data-cover-base="${p.coverImage.replace(/\.[^.]+$/, '')}" data-cover-ext-index="0" onerror="tryNextCoverExtension(this)" alt="${p.title}">
         <span class="project-label">${p.title}</span>
       </button>`;
   };
