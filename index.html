@@ -77,6 +77,77 @@
 }
 </style>
 
+
+<style>
+/* About: two text columns, no portrait or headings */
+.about-page .about-layout {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  column-gap: clamp(28px, 5vw, 84px) !important;
+  align-items: start !important;
+}
+.about-page .about-portrait {
+  display: none !important;
+}
+.about-page .about-copy {
+  grid-column: 1 !important;
+  width: auto !important;
+  max-width: none !important;
+}
+.about-page .about-cv {
+  grid-column: 2 !important;
+  width: auto !important;
+  max-width: none !important;
+  align-self: start !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+.about-page .about-cv,
+.about-page .about-cv * {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+.about-page .about-copy {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+.about-page .about-cv-entry {
+  margin: 0 0 1.35em 0;
+}
+.about-page .about-cv-entry p {
+  margin: 0;
+}
+.about-page .about-cv-date {
+  margin-bottom: 0.3em !important;
+}
+.about-page .about-contact {
+  margin-top: 1.5em;
+}
+@media (max-width: 800px) {
+  .about-page .about-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    row-gap: 1.5em !important;
+  }
+  .about-page .about-copy,
+  .about-page .about-cv {
+    grid-column: 1 !important;
+  }
+}
+/* Keep project titles hidden on desktop, including after returning from a project. */
+@media (min-width: 801px) and (hover: hover) {
+  .project-card .project-label,
+  .project-card:hover .project-label,
+  .project-card:focus .project-label,
+  .project-card:focus-visible .project-label {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="cursor" aria-hidden="true"></div>
@@ -210,23 +281,35 @@ function aboutTemplate() {
     <article class="about-page">
       <a class="page-close interactive" href="index.html#resume" aria-label="Zur Startseite">×</a>
       <div class="about-layout">
-        <div class="about-portrait">
-          <img src="assets/about/portrait.jpg" alt="Portrait von Olivia Bayne">
-        </div>
         <div class="about-copy">
-          <h1>About</h1>
-          <p>Mich interessieren besonders Typografie und Editorial Design, experimentelle Gestaltung und die Schnittstellen zwischen Design und Kunst. Im Studium nutze ich den Raum, unterschiedliche Materialien, Medien und Methoden auszuprobieren und über den Prozess zu einer eigenen visuellen Sprache zu finden.</p>
-          <p>Ein inhaltlicher Schwerpunkt meiner Arbeit liegt auf feministischen Themen. Mich interessiert, wie Gestaltung gesellschaftliche Strukturen, persönliche Erfahrungen und Fragen von Sichtbarkeit, Körper, Raum und Repräsentation verhandeln kann. Dabei arbeite ich gern sowohl recherchierend als auch persönlich und übersetze Inhalte in editorische, typografische oder räumliche Formen.</p>
-          <p>Bevor ich Kommunikationsdesign studiert habe, habe ich eine Ausbildung zur Kauffrau für audiovisuelle Medien abgeschlossen. Danach ist der Wunsch geblieben, mich stärker gestalterisch weiterzuentwickeln und selbst visuell zu arbeiten – deshalb habe ich mich für das Studium entschieden.</p>
+          <p>Mich interessieren Typografie, Editorial Design und experimentelle Gestaltung an der Schnittstelle von Design und Kunst. Im Studium probiere ich gern unterschiedliche Materialien, Medien und Arbeitsweisen aus.</p>
+          <p>In meiner Arbeit beschäftige ich mich besonders mit feministischen Themen und Fragen von Sichtbarkeit, Körper, Raum und Repräsentation. Dabei verbinde ich Recherche mit persönlichen Perspektiven und setze Inhalte in typografische, editorische oder räumliche Formen um.</p>
+          <p>Ich mag es, spielerisch an Dinge heranzugehen, Neues auszuprobieren und mit Gestaltung auch mal gewohnte Perspektiven infrage zu stellen.</p>
           <div class="about-contact">
             <p>Kontakt: <a href="mailto:olivia.bayne@live.de">olivia.bayne@live.de</a><br>Instagram: <a href="https://www.instagram.com/olivia.bayne/" target="_blank" rel="noopener">@olivia.bayne</a></p>
+          </div>
+        </div>
+        <div class="about-cv">
+          <div class="about-cv-entry">
+            <p class="about-cv-date">08/2020 – 02/2023</p>
+            <p>Ausbildung zur Kauffrau für audiovisuelle Medien</p>
+            <p>Berufsschule für Medien und Kommunikation</p>
+          </div>
+          <div class="about-cv-entry">
+            <p class="about-cv-date">04/2023 – 07/2023</p>
+            <p>Praktikum Kostüm · Filmproduktion</p>
+            <p>Network Movie</p>
+          </div>
+          <div class="about-cv-entry">
+            <p class="about-cv-date">04/2024 – heute</p>
+            <p>Bachelor Kommunikationsdesign</p>
+            <p>Hochschule für Angewandte Wissenschaft Hamburg</p>
           </div>
         </div>
       </div>
     </article>
   `;
 }
-
 
 function galleryImageMarkup(projectId, number, title) {
   const base = `assets/project-${projectId}/${String(number).padStart(2, "0")}`;
